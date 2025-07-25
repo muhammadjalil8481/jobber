@@ -1,5 +1,4 @@
-import { LogLevel } from "@muhammadjalil8481/jobber-shared";
-import { winstonLogger } from "./logss";
+import { LogLevel, winstonLogger} from "@muhammadjalil8481/jobber-shared";
 
 const log = winstonLogger({
   name: "gateway-service",

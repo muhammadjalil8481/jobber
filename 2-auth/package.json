@@ -13,7 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@muhammadjalil8481/jobber-shared": "^0.7.32",
+    "@muhammadjalil8481/jobber-shared": "^0.7.34",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-async-errors": "^3.1.1",

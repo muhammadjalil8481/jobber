@@ -13,7 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@muhammadjalil8481/jobber-shared": "^0.7.32",
+    "@muhammadjalil8481/jobber-shared": "^0.7.34",
     "clean-stack": "^5.2.0",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
