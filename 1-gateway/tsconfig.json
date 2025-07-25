@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES6", // Compile to ES6 JavaScript
+    "module": "CommonJS", // Use CommonJS module system (Node.js-style require)
+    "rootDir": "./src", // Only converts src folder files to js
+    "outDir": "./dist", // Outputs to dist folder
+    "lib": ["esnext", "dom"], // Needed for modern JS (like BigInt) and browser APIs
+    "importHelpers": true, // Helps reduce bundle size by using tslib
+    "sourceMap": true, // Create .map files for debugging
+    "noEmitOnError": true, // Don’t output files if there are any TypeScript errors
+    "baseUrl": ".", // Base directory for non-relative module names
+    "strict": true, 
+    "noImplicitAny": true, 
+    "noUnusedLocals": true, // Allows importing .json files directly
+    "noUnusedParameters": true, 
+    "esModuleInterop": true, 
+    "alwaysStrict": true, 
+    "experimentalDecorators": true, 
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true, 
+    "forceConsistentCasingInFileNames": true, 
+    "pretty": true, 
+    "resolveJsonModule": true, // Allows importing .json files directly
+    // Ensures your @gateway/* aliases are transformed correctly during compile
+    "plugins": [
+      { "transform": "typescript-transform-paths" }, 
+    ],
+    // Path mapping for module resolution
+    "paths": {
+      "@gateway/*": ["src/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/*.test.ts", "**/*.spec.ts", "**/__tests__/**"]
+}
