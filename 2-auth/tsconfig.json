@@ -21,13 +21,13 @@
     "forceConsistentCasingInFileNames": true, 
     "pretty": true, 
     "resolveJsonModule": true, // Allows importing .json files directly
-    // Ensures your @gateway/* aliases are transformed correctly during compile
+    // Ensures your @auth/* aliases are transformed correctly during compile
     "plugins": [
       { "transform": "typescript-transform-paths" }, 
     ],
     // Path mapping for module resolution
     "paths": {
-      "@gateway/*": ["src/*"]
+      "@auth/*": ["src/*"]
     }
   },
   "include": ["src"],
