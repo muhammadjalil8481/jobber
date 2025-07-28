@@ -3,9 +3,10 @@ import {
   getAuthUserByEmail,
   getAuthUserByUsername,
 } from "@auth/services/auth.service";
-import { createFingerprint, signToken } from "@auth/services/helpers";
+import { signToken } from "@auth/services/helpers";
 import {
   BadRequestError,
+  createFingerprint,
   IAuthDocument,
   isEmail,
 } from "@muhammadjalil8481/jobber-shared";
