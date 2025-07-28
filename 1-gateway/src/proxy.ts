@@ -95,7 +95,7 @@ export const createProxy = ({
 
       error: (err, _req, res) => {
         log.error(
-          `Proxy Error: ${serviceNameForLogging}`,
+          `Proxy Error: ${serviceNameForLogging} Service`,
           "proxy.ts/error()",
           err
         );
@@ -103,8 +103,8 @@ export const createProxy = ({
         (res as any).writeHead(502, { "Content-Type": "application/json" });
         res.end(
           JSON.stringify({
-            error: "Bad Gateway",
-            message: err.message,
+            error: "error",
+            message: "Something went wrong. Please try again later.",
           })
         );
       },
