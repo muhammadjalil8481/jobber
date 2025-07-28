@@ -17,7 +17,7 @@ export async function signUp(req: Request, res: Response) {
   const transaction = await sequelize.transaction();
   try {
     const { username, email, password, country } = req.body;
-
+console.log('query', req.query);
     const checkIfUserExist: IAuthDocument | null =
       await getUserByUsernameOrEmail(lowerCase(username), lowerCase(email));
 
@@ -49,7 +49,6 @@ export async function signUp(req: Request, res: Response) {
       data: result,
     });
 
-    res.send("ok");
   } catch (error) {
     await transaction.rollback();
     throw error;

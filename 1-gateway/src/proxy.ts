@@ -92,6 +92,22 @@ export const createProxy = ({
                 serviceNameForLogging
               );
             },
+
+      error: (err, _req, res) => {
+        log.error(
+          `Proxy Error: ${serviceNameForLogging}`,
+          "proxy.ts/error()",
+          err
+        );
+
+        (res as any).writeHead(502, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            error: "Bad Gateway",
+            message: err.message,
+          })
+        );
+      },
     },
   });
 };

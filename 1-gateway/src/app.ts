@@ -14,7 +14,7 @@ initializeGlobalMiddleware(app);
 
 app.use(verifyUser);
 
-app.use(generateServicePath("auth"), authProxy);
+app.use(generateServicePath("auth"), authProxy!);
 
 app.use(express.json({ limit: "1mb" })); //Works on ajax request
 app.use(express.urlencoded({ limit: "1mb", extended: true })); //Works on html form submissions

@@ -1,7 +1,6 @@
 import { Application, Request, Response } from "express";
 import cors from "cors";
 import compression from "compression";
-import hpp from "hpp";
 import helmet from "helmet";
 import { config } from "@gateway/config";
 import cookieParser from "cookie-parser";
@@ -26,13 +25,6 @@ function initializeGlobalMiddleware(app: Application) {
   app.set("trust proxy", true); // Trust the first proxy (useful if your app is behind a reverse proxy like Nginx)
 
   app.use(cookieParser([config.SECRET_KEY_ONE, config.SECRET_KEY_TWO])); // <-- this is required
-
-  // This middleware helps to prevent HTTP Parameter Pollution attacks
-  app.use(
-    hpp({
-      whitelist: [],
-    })
-  );
 
   app.use(helmet());
 
