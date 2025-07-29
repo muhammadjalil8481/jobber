@@ -14,7 +14,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@muhammadjalil8481/jobber-shared": "^0.7.44",
+    "@muhammadjalil8481/jobber-shared": "^0.7.45",
     "clean-stack": "^5.2.0",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",

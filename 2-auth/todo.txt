@@ -1,0 +1,3 @@
+1) Publish messages to user and notification service in signup
+2) Publish message to notification service in resend verification email
+3) Publish message to notification service in forgot password
