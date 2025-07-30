@@ -17,7 +17,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@muhammadjalil8481/jobber-shared": "^0.7.45",
+    "@faker-js/faker": "^9.9.0",
+    "@muhammadjalil8481/jobber-shared": "^0.7.46",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

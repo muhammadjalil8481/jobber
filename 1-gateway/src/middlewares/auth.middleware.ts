@@ -13,7 +13,7 @@ const verifyUser = (req: Request, _res: Response, next: NextFunction) => {
         config.JWT_TOKEN_SECRET
       ) as IAuthPayload;
       const fingerprint = createFingerprint(req);
-      if ((payload as any).fingerprint === fingerprint) {
+      if (payload.fingerprint === fingerprint) {
         req.currentUser = payload;
       }
     }

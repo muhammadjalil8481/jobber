@@ -4,20 +4,29 @@ import {
 } from "@auth/services/auth.service";
 import {
   BadRequestError,
+  createFingerprint,
   IAuthDocument,
+  isEmail,
   lowerCase,
 } from "@muhammadjalil8481/jobber-shared";
 import { Request, Response } from "express";
 import crypto from "crypto";
 import { sequelize } from "@auth/database/connection";
 import { StatusCodes } from "http-status-codes";
+import { AuthModel } from "@auth/models/authUser.model";
+import {
+  getAuthUserByEmail,
+  getAuthUserByUsername,
+} from "@auth/services/auth.service";
+import { signToken } from "@auth/services/helpers";
+import { omit } from "lodash";
 
 export async function signUp(req: Request, res: Response) {
   const context = "signup.ts/signUp()";
   const transaction = await sequelize.transaction();
   try {
     const { username, email, password, country } = req.body;
-console.log('query', req.query);
+    console.log("query", req.query);
     const checkIfUserExist: IAuthDocument | null =
       await getUserByUsernameOrEmail(lowerCase(username), lowerCase(email));
 
@@ -48,7 +57,6 @@ console.log('query', req.query);
       message: "User created successfully",
       data: result,
     });
-
   } catch (error) {
     await transaction.rollback();
     throw error;
@@ -57,4 +65,46 @@ console.log('query', req.query);
       await transaction.rollback();
     }
   }
+}
+
+export async function logIn(req: Request, res: Response) {
+  const context = "login.ts/logIn()";
+  const { username, password } = req.body;
+  const isValidEmail: boolean = isEmail(username);
+
+  const existingUser: IAuthDocument | null = isValidEmail
+    ? await getAuthUserByEmail(username)
+    : await getAuthUserByUsername(username);
+
+  if (!existingUser) {
+    throw new BadRequestError("Invalid credentials", context);
+  }
+
+  const passwordsMatch: boolean = await AuthModel.prototype.comparePassword(
+    password,
+    `${existingUser.password}`
+  );
+  if (!passwordsMatch) {
+    throw new BadRequestError("Invalid credentials", context);
+  }
+
+  const fingerprint = createFingerprint(req);
+
+  const tokenPaylod = {
+    id: existingUser.id,
+    email: existingUser.email,
+    username: existingUser.username,
+    fingerprint,
+  };
+  const accessToken: string = signToken(tokenPaylod, `15m`);
+  const refreshToken: string = signToken(tokenPaylod, `7d`);
+
+  const userData = omit(existingUser, ["password"]);
+
+  res.status(StatusCodes.OK).json({
+    data: userData,
+    accessToken: accessToken,
+    refreshToken: refreshToken,
+    message: "User signed in successfully",
+  });
 }

@@ -12,6 +12,16 @@ services:
       MYSQL_DATABASE: authentication
     volumes:
       - ./docker-volumes/mysql:/var/lib/mysql
+  rabbitmq:
+    container_name: rabbitmq_container
+    image: rabbitmq:management-alpine
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: user # Default username
+      RABBITMQ_DEFAULT_PASS: password # Default password
+    ports:
+      - '5672:5672' #AMQP
+      - '15672:15672' #Dashboard
  
  
 
