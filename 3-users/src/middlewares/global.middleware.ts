@@ -1,13 +1,10 @@
-import express, { Application } from "express";
+import express, { Application} from "express";
 import helmet from "helmet";
 import cors from "cors";
-import { config } from "@auth/config";
 import hpp from "hpp";
+import { config } from "@users/config";
 
 export function initializeGlobalMiddleware(app: Application) {
-  // Only uncomment if you need clients real ip
-  // app.set("trust proxy", true);
-  // app.use(compression());
   app.use(express.json({ limit: "1mb" }));
   app.use(express.urlencoded({ limit: "1mb", extended: true }));
 
