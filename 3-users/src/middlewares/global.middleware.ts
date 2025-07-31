@@ -1,8 +1,9 @@
-import express, { Application} from "express";
+import express, { Application } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import hpp from "hpp";
 import { config } from "@users/config";
+import cloudinary from "cloudinary";
 
 export function initializeGlobalMiddleware(app: Application) {
   app.use(express.json({ limit: "1mb" }));
@@ -24,4 +25,10 @@ export function initializeGlobalMiddleware(app: Application) {
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
     })
   );
+
+  cloudinary.v2.config({
+    cloud_name: config.CLOUD_NAME,
+    api_key: config.CLOUD_API_KEY,
+    api_secret: config.CLOUD_API_SECRET,
+  });
 }

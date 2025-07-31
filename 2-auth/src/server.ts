@@ -2,17 +2,21 @@ import { Application } from "express";
 import { config } from "./config";
 import { log } from "./logger";
 import { checkDatabaseConnection } from "./database/connection";
+import { Channel } from "amqplib";
+import { createEventConnection } from "./events/connection";
 
 const SERVER_PORT = config.PORT || 4002;
+export let rabbitMQChannel: Channel;
 
 function startServer(app: Application) {
   try {
-    app.listen(SERVER_PORT, () => {
+    app.listen(SERVER_PORT, async () => {
       log.info(
         `Auth service running on port ${SERVER_PORT}`,
         "server.ts/startServer()"
       );
-      checkDatabaseConnection();
+      await checkDatabaseConnection();
+      rabbitMQChannel = (await createEventConnection()) as Channel;
     });
   } catch (error) {
     log.error(

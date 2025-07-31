@@ -5,6 +5,7 @@ import { config } from "./config";
 async function databaseConnection(): Promise<void> {
   const context = "database.ts/databaseConnection()";
   try {
+    log.info(`Connecting to database. Url=${config.DATABASE_URL}`, context);
     await mongoose.connect(config.DATABASE_URL);
     log.info("Database connected successfully", context);
   } catch (err) {
@@ -13,6 +14,7 @@ async function databaseConnection(): Promise<void> {
       context,
       err as Error
     );
+    process.exit(1)
   }
 }
 

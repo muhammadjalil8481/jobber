@@ -8,6 +8,10 @@ const envList = [
   "PORT",
   "API_GATEWAY_URL",
   "DATABASE_URL",
+  "CLOUD_NAME",
+  "CLOUD_API_KEY",
+  "CLOUD_API_SECRET",
+  "RABBITMQ_ENDPOINT",
 ] as const;
 
 export const config = createConfig(envList);
