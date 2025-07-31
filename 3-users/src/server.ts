@@ -1,6 +1,7 @@
 import { Application } from "express";
 import { config } from "./config";
 import { log } from "./logger";
+import { databaseConnection } from "./database";
 
 const SERVER_PORT = config.PORT || 4003;
 
@@ -11,6 +12,7 @@ function startServer(app: Application) {
         `Users service running on port ${SERVER_PORT}`,
         "server.ts/startServer()"
       );
+      databaseConnection();
     });
   } catch (error) {
     log.error(

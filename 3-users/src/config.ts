@@ -3,6 +3,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const envList = ["NODE_ENV", "PORT","API_GATEWAY_URL"] as const;
+const envList = [
+  "NODE_ENV",
+  "PORT",
+  "API_GATEWAY_URL",
+  "DATABASE_URL",
+] as const;
 
 export const config = createConfig(envList);
