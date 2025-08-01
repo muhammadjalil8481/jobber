@@ -20,13 +20,13 @@ import {
 } from "@auth/services/auth.service";
 import { signToken } from "@auth/services/helpers";
 import { omit } from "lodash";
+import { publishUserCreationEvent } from "@auth/events/producer";
 
 export async function signUp(req: Request, res: Response) {
   const context = "signup.ts/signUp()";
   const transaction = await sequelize.transaction();
   try {
     const { username, email, password, country } = req.body;
-    console.log("query", req.query);
     const checkIfUserExist: IAuthDocument | null =
       await getUserByUsernameOrEmail(lowerCase(username), lowerCase(email));
 
@@ -50,6 +50,13 @@ export async function signUp(req: Request, res: Response) {
     } as IAuthDocument;
 
     const result: IAuthDocument = await createUser(authData, transaction);
+
+    const isUserCreationEventPublished = await publishUserCreationEvent(result);
+
+    if (!isUserCreationEventPublished)
+      throw new Error(
+        `Error is publishing user creation event - email : ${email}`
+      );
 
     await transaction.commit();
 

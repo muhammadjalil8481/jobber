@@ -17,7 +17,7 @@ app.use(router);
 app.use(
   errorHandlerMiddleware({
     log,
-    serviceName: "Auth Service",
+    serviceName: "Users Service",
   })
 );
 
