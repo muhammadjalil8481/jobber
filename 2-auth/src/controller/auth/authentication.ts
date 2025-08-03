@@ -21,6 +21,12 @@ import {
 import { signToken } from "@auth/services/helpers";
 import { omit } from "lodash";
 import { publishUserCreationEvent } from "@auth/events/producer";
+import {
+  assignUserRole,
+  getRoleByName,
+  getUserRole,
+} from "@auth/services/roles.service";
+import { IRoleDocument } from "@auth/models/role.model";
 
 export async function signUp(req: Request, res: Response) {
   const context = "signup.ts/signUp()";
@@ -50,6 +56,13 @@ export async function signUp(req: Request, res: Response) {
     } as IAuthDocument;
 
     const result: IAuthDocument = await createUser(authData, transaction);
+
+    const role: IRoleDocument | null = await getRoleByName("buyer");
+
+    await assignUserRole(
+      { userId: result.id!, roleId: role?.id! },
+      transaction
+    );
 
     const isUserCreationEventPublished = await publishUserCreationEvent(result);
 
@@ -97,10 +110,14 @@ export async function logIn(req: Request, res: Response) {
 
   const fingerprint = createFingerprint(req);
 
+  const userRoles = await getUserRole(existingUser.id!);
+  const roleIds = userRoles.map((userRole) => userRole.id);
+
   const tokenPaylod = {
     id: existingUser.id,
     email: existingUser.email,
     username: existingUser.username,
+    roles: roleIds,
     fingerprint,
   };
   const accessToken: string = signToken(tokenPaylod, `15m`);

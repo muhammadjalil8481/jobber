@@ -9,6 +9,7 @@ export async function createUser(
   transaction?: Transaction
 ): Promise<IAuthDocument> {
   const result = await AuthModel.create(data, { transaction });
+  
   const authUser = result.dataValues;
   const userData: IAuthDocument = omit(authUser, ["password"]);
   return userData;

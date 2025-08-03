@@ -1,6 +1,10 @@
 import { logIn, signUp } from "@auth/controller/auth/authentication";
 import { getCurrentUser } from "@auth/controller/auth/current-user";
-import { changePassword, forgotPassword, resetPassword } from "@auth/controller/auth/password";
+import {
+  changePassword,
+  forgotPassword,
+  resetPassword,
+} from "@auth/controller/auth/password";
 import { refreshToken } from "@auth/controller/auth/refresh-token";
 import { resendVerificationEmail } from "@auth/controller/auth/resend-verification-email";
 import { verifyEmail } from "@auth/controller/auth/verify-email";
@@ -9,17 +13,23 @@ import { forgetPasswordSchema } from "@auth/schema/forget-password.schema";
 import { loginSchema } from "@auth/schema/login.schema";
 import { resetPasswordSchema } from "@auth/schema/resetPasswordSchema";
 import { signupSchema } from "@auth/schema/signup.schema";
+import { getRedisClient } from "@auth/server";
 import {
   checkAuthentication,
   validateRequest,
+  withPermission,
 } from "@muhammadjalil8481/jobber-shared";
 import { Router } from "express";
 
 const router: Router = Router();
-
 router.post("/api/v1/signup", validateRequest(signupSchema), signUp);
 router.post("/api/v1/login", validateRequest(loginSchema), logIn);
-router.get("/api/v1/current-user", checkAuthentication, getCurrentUser);
+router.get(
+  "/api/v1/current-user",
+  checkAuthentication,
+  withPermission("gigs/create", getRedisClient),
+  getCurrentUser
+);
 router.patch("/api/v1/verify-email", verifyEmail);
 router.post(
   "/api/v1/resend-verification-email",
@@ -43,6 +53,5 @@ router.patch(
   changePassword
 );
 router.post("/api/v1/refresh-token", refreshToken);
-
 
 export { router as authRouter };
