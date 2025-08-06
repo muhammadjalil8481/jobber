@@ -162,3 +162,10 @@ export const authProxy = createProxy({
     }
   },
 });
+
+export const usersProxy = createProxy({
+  target: "http://localhost:4002",
+  serviceName: "users",
+  serviceNameForLogging: "Users",
+  handleSelfResponse: false,
+});

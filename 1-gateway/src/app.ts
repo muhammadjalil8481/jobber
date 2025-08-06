@@ -6,7 +6,7 @@ import router from "./router/routes";
 import { log } from "./logger";
 import { errorHandlerMiddleware } from "@muhammadjalil8481/jobber-shared";
 import { generateServicePath } from "./middlewares/generate-service-path";
-import { authProxy } from "./proxy";
+import { authProxy, usersProxy } from "./proxy";
 
 const app = express();
 
@@ -14,7 +14,8 @@ initializeGlobalMiddleware(app);
 
 app.use(verifyUser);
 
-app.use(generateServicePath("auth"), authProxy!);
+app.use(generateServicePath("auth"), authProxy);
+app.use(generateServicePath("users"), usersProxy);
 
 app.use(express.json({ limit: "1mb" })); //Works on ajax request
 app.use(express.urlencoded({ limit: "1mb", extended: true })); //Works on html form submissions
