@@ -1,6 +1,11 @@
 import Joi from "joi";
 
 const signupSchema = Joi.object().keys({
+  name: Joi.string().min(4).max(20).required().messages({
+    "string.base": "name must be a string",
+    "string.empty": "name cannot be empty",
+    "any.required": "name is required",
+  }),
   username: Joi.string().min(4).max(20).required().messages({
     "string.base": "username must be a string",
     "string.empty": "username cannot be empty",

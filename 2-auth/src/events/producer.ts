@@ -5,15 +5,20 @@ import {
   publishDirectMessage,
 } from "@muhammadjalil8481/jobber-shared";
 
-async function publishUserCreationEvent(userData: IAuthDocument) {
+async function publishUserCreationEvent(
+  userData: IAuthDocument,
+  roleId: number
+) {
   const context = `producer.ts/publishUserCreationEvent()`;
   if (!userData)
     throw new Error(`Invalid user data : ${userData} coming From ${context}`);
   const message = {
+    name: userData.name,
     username: userData.username,
     email: userData.email,
     country: userData.country,
     createdAt: userData.createdAt,
+    roles: [roleId],
   };
 
   const isPublished = await publishDirectMessage({

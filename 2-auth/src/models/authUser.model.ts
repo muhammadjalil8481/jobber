@@ -25,6 +25,10 @@ const AuthModel: ModelDefined<IAuthDocument, AuthUserCreationAttributes> &
   AuthModelInstanceMethods = sequelize.define(
   "users",
   {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,

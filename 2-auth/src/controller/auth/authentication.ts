@@ -32,7 +32,7 @@ export async function signUp(req: Request, res: Response) {
   const context = "signup.ts/signUp()";
   const transaction = await sequelize.transaction();
   try {
-    const { username, email, password, country } = req.body;
+    const { name, username, email, password, country } = req.body;
     const checkIfUserExist: IAuthDocument | null =
       await getUserByUsernameOrEmail(lowerCase(username), lowerCase(email));
 
@@ -48,6 +48,7 @@ export async function signUp(req: Request, res: Response) {
     const randomCharacters: string = randomBytes.toString("hex");
 
     const authData: IAuthDocument = {
+      name,
       username: lowerCase(username),
       email: email,
       password,
@@ -58,13 +59,18 @@ export async function signUp(req: Request, res: Response) {
     const result: IAuthDocument = await createUser(authData, transaction);
 
     const role: IRoleDocument | null = await getRoleByName("buyer");
+    if(!role?.id)
+      throw new Error("Role not found")
 
     await assignUserRole(
       { userId: result.id!, roleId: role?.id! },
       transaction
     );
 
-    const isUserCreationEventPublished = await publishUserCreationEvent(result);
+    const isUserCreationEventPublished = await publishUserCreationEvent(
+      result,
+      role!.id
+    );
 
     if (!isUserCreationEventPublished)
       throw new Error(
