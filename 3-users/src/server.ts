@@ -5,7 +5,7 @@ import { databaseConnection } from "./database";
 import { Channel } from "amqplib";
 import { createEventConnection } from "./events/connection";
 
-const SERVER_PORT = config.PORT || 4003;
+const SERVER_PORT = config.PORT || 4002;
 export let rabbitMQChannel: Channel;
 
 function startServer(app: Application) {
