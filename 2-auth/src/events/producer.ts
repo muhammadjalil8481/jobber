@@ -2,6 +2,7 @@ import { log } from "@auth/logger";
 import { rabbitMQChannel } from "@auth/server";
 import {
   IAuthDocument,
+  IRoleDocument,
   publishDirectMessage,
 } from "@muhammadjalil8481/jobber-shared";
 
@@ -24,7 +25,7 @@ async function publishUserCreationEvent(
   const isPublished = await publishDirectMessage({
     channel: rabbitMQChannel,
     exchangeName: "auth_user_creation_ex",
-    routingKey: "user_user_creation_rk",
+    routingKey: "auth_user_creation_rk",
     message: JSON.stringify(message),
     logParams: {
       log,
@@ -36,4 +37,28 @@ async function publishUserCreationEvent(
   return isPublished;
 }
 
-export { publishUserCreationEvent };
+async function publishRoleCreationEvent(data: IRoleDocument) {
+  const context = `producer.ts/publishRoleCreationEvent()`;
+  if (!data)
+    throw new Error(`Invalid role data : ${data} coming From ${context}`);
+  const message = {
+    roleId: data.id,
+    name: data.name,
+  };
+
+  const isPublished = await publishDirectMessage({
+    channel: rabbitMQChannel,
+    exchangeName: "auth_role_creation_ex",
+    routingKey: "auth_role_creation_rk",
+    message: JSON.stringify(message),
+    logParams: {
+      log,
+      logMessage: `Role creation event successfully published - role id : ${data.id}`,
+      context,
+    },
+  });
+
+  return isPublished;
+}
+
+export { publishUserCreationEvent, publishRoleCreationEvent };

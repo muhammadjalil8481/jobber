@@ -4,6 +4,7 @@ import { Request, Response, Router } from "express";
 import fs from "fs";
 import { StatusCodes } from "http-status-codes";
 import { buyerRouter } from "./buyer";
+import { sellerRouter } from "./seller";
 
 const publicKey = fs.readFileSync("./public.pem", "utf-8");
 const gatewayMiddleware = gatewayRequestVerification(publicKey);
@@ -15,6 +16,7 @@ router.get("/health", (_req: Request, res: Response) => {
 });
 
 router.use(gatewayMiddleware, buyerRouter);
+router.use(gatewayMiddleware,sellerRouter)
 
 router.all("*", (req: Request, res: Response) => {
   const url = `${req.protocol}://${req.get("host")}${req.originalUrl}`;

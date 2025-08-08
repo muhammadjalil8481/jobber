@@ -18,6 +18,16 @@ const buyerSchema: Schema = new Schema(
       required: true,
       index: true,
     },
+    roles: {
+      type: [Number],
+      required: true,
+      validate: {
+        validator: function (arr: number[]) {
+          return Array.isArray(arr) && arr.length > 0;
+        },
+        message: "At least one number is required in the scores array",
+      },
+    },
     profilePicture: {
       type: String,
       required: false,
@@ -29,16 +39,6 @@ const buyerSchema: Schema = new Schema(
     country: {
       type: String,
       required: true,
-    },
-    roles: {
-      type: [Number],
-      required: true,
-      validate: {
-        validator: function (arr: number[]) {
-          return Array.isArray(arr) && arr.length > 0;
-        },
-        message: "At least one number is required in the scores array",
-      },
     },
   },
   {

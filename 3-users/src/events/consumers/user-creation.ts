@@ -12,11 +12,10 @@ export const consumeAuthUserCreationMessage = async (channel: Channel): Promise<
     channel,
     exchangeName,
     queueName: "auth_user_creation_queue",
-    bindingKey: "user_user_creation_rk",
+    bindingKey: "auth_user_creation_rk",
     context: "user-creation.ts/consumeBuyerDirectMessage()",
     exchangeType: "direct",
     log,
-    queueOptions: {},
     handler: async (msg: ConsumeMessage) => {
       const data = JSON.parse(msg!.content.toString());
       const { name,username, email, country, createdAt, roles } = data;

@@ -25,6 +25,8 @@ import {
   getRolePermission,
 } from "@auth/services/permission.service";
 import { PermissionCreationAttributes } from "@auth/models/permission.model";
+import { sequelize } from "@auth/database/connection";
+import { publishRoleCreationEvent } from "@auth/events/producer";
 
 export async function seedUsers(req: Request, res: Response): Promise<void> {
   if (config.NODE_ENV !== "development") {
@@ -55,12 +57,29 @@ export async function seedRoles(_req: Request, res: Response): Promise<void> {
     throw new BadRequestError("Bad Request", "seed.ts/seedRoles()");
 
   for (let role of seedRolesList) {
-    const checkRoleExists = await getRoleByName(role);
-    if (checkRoleExists) continue;
-    const roleData: RoleCreationAttributes = {
-      name: role,
-    };
-    await createRole(roleData);
+    const transaction = await sequelize.transaction();
+
+    try {
+      const checkRoleExists = await getRoleByName(role);
+      if (checkRoleExists) continue;
+      const roleData: RoleCreationAttributes = {
+        name: role,
+      };
+      const roleDocument = await createRole(roleData, transaction);
+      const isPublished = await publishRoleCreationEvent(roleDocument);
+      if (!isPublished)
+        throw new Error(
+          `Error is publishing role creation event - roleId : ${roleDocument.id}`
+        );
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    } finally {
+      if (!(transaction as { finished?: string }).finished) {
+        await transaction.rollback();
+      }
+    }
   }
 
   res.status(StatusCodes.OK).json({ message: "roles seeded successfully." });
