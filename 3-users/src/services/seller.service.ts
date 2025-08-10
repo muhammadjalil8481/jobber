@@ -13,6 +13,15 @@ const getSellerByIdService = async (
   return seller;
 };
 
+export const getSellerByBuyerIdService = async (
+  id: string
+): Promise<ISellerDocument | null> => {
+  const seller: ISellerDocument | null = (await SellerModel.findOne({
+    buyerId: id,
+  }).exec()) as ISellerDocument;
+  return seller;
+};
+
 const getSellerByUsernameService = async (
   username: string
 ): Promise<ISellerDocument | null> => {
@@ -40,9 +49,45 @@ const getRandomSellersService = async (
   return sellers;
 };
 
+const createSellerService = async (
+  sellerData: Partial<ISellerDocument>,
+): Promise<ISellerDocument> => {
+  const createdSeller: ISellerDocument = (
+    await SellerModel.create(sellerData)
+  )[0] as ISellerDocument;
+  return createdSeller;
+};
+
+const updateSellerService = async (
+  sellerId: string,
+  sellerData: Partial<ISellerDocument>,
+): Promise<ISellerDocument> => {
+  const updatedSeller: ISellerDocument = (await SellerModel.findOneAndUpdate(
+    { _id: sellerId },
+    {
+      $set: {
+        name: sellerData.fullName,
+        description: sellerData.description,
+        skills: sellerData.skills,
+        oneliner: sellerData.oneliner,
+        languages: sellerData.languages,
+        experience: sellerData.experience,
+        education: sellerData.education,
+        socialLinks: sellerData.socialLinks,
+        certificates: sellerData.certificates,
+      },
+    },
+    { new: true }
+  ).exec()) as ISellerDocument;
+  return updatedSeller;
+};
+
+
 export {
   getSellerByIdService,
   getRandomSellersService,
   getSellerByEmailService,
   getSellerByUsernameService,
+  createSellerService,
+  updateSellerService
 };

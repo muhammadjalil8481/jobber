@@ -6,11 +6,6 @@ async function cacheRolePermissions() {
   const context = "cacheRolePermissions.ts/cacheRolePermissions()";
   try {
     const rolePermissions = await getRolePermissions();
-    const alreadyCached = await redisClient.get("role-permissions");
-    if (alreadyCached) {
-      log.info("Role permissions already cached", context);
-    }
-
     await redisClient.set("role-permissions", JSON.stringify(rolePermissions));
     log.info("Role Permission cached successfully", context);
   } catch (error) {

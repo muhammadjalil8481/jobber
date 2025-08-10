@@ -3,6 +3,7 @@ import { config } from "@users/config";
 import { log } from "@users/logger";
 import { Channel } from "amqplib";
 import { consumeAuthUserCreationMessage } from "./consumers/user-creation";
+import { consumeAuthRoleCreationMessage } from "./consumers/role-creation";
 
 async function createEventConnection(): Promise<Channel | undefined> {
   const channel = await createConnection({
@@ -10,6 +11,7 @@ async function createEventConnection(): Promise<Channel | undefined> {
     connectionUrl: config.RABBITMQ_ENDPOINT,
   });
   await consumeAuthUserCreationMessage(channel!);
+  await consumeAuthRoleCreationMessage(channel!);
   return channel;
 }
 

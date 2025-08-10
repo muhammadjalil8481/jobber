@@ -13,11 +13,11 @@ import { forgetPasswordSchema } from "@auth/schema/forget-password.schema";
 import { loginSchema } from "@auth/schema/login.schema";
 import { resetPasswordSchema } from "@auth/schema/resetPasswordSchema";
 import { signupSchema } from "@auth/schema/signup.schema";
-import { getRedisClient } from "@auth/server";
+// import { getRedisClient } from "@auth/server";
 import {
   checkAuthentication,
   validateRequest,
-  withPermission,
+  // withPermission,
 } from "@muhammadjalil8481/jobber-shared";
 import { Router } from "express";
 
@@ -27,10 +27,10 @@ router.post("/api/v1/login", validateRequest(loginSchema), logIn);
 router.get(
   "/api/v1/current-user",
   checkAuthentication,
-  withPermission("gigs/create", getRedisClient),
+  // withPermission("gigs/create", getRedisClient),
   getCurrentUser
 );
-router.patch("/api/v1/verify-email", verifyEmail);
+router.post("/api/v1/verify-email", verifyEmail);
 router.post(
   "/api/v1/resend-verification-email",
   checkAuthentication,

@@ -1,4 +1,4 @@
-import { IBuyerDocument } from "@muhammadjalil8481/jobber-shared";
+import { IRoleDocument } from "@muhammadjalil8481/jobber-shared";
 import { model, Model, Schema } from "mongoose";
 
 const roleSchema: Schema = new Schema(
@@ -18,7 +18,7 @@ const roleSchema: Schema = new Schema(
   }
 );
 
-const RoleModel: Model<IBuyerDocument> = model<IBuyerDocument>(
+const RoleModel: Model<IRoleDocument> = model<IRoleDocument>(
   "Role",
   roleSchema
 );

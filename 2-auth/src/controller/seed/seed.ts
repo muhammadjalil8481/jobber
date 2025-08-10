@@ -3,7 +3,6 @@ import crypto from "crypto";
 import { faker } from "@faker-js/faker";
 import {
   BadRequestError,
-  firstLetterUppercase,
   IAuthDocument,
   lowerCase,
 } from "@muhammadjalil8481/jobber-shared";
@@ -27,6 +26,7 @@ import {
 import { PermissionCreationAttributes } from "@auth/models/permission.model";
 import { sequelize } from "@auth/database/connection";
 import { publishRoleCreationEvent } from "@auth/events/producer";
+import { cacheRolePermissions } from "@auth/redis/cacheRolePermissions";
 
 export async function seedUsers(req: Request, res: Response): Promise<void> {
   if (config.NODE_ENV !== "development") {
@@ -38,7 +38,7 @@ export async function seedUsers(req: Request, res: Response): Promise<void> {
 
   for (let i = 0; i < Number(count); i++) {
     const authData: IAuthDocument = {
-      username: firstLetterUppercase(faker.internet.username()),
+      username: lowerCase(faker.internet.username()),
       email: lowerCase(faker.internet.email()),
       password: "qwerty",
       country: faker.location.country(),
@@ -71,6 +71,7 @@ export async function seedRoles(_req: Request, res: Response): Promise<void> {
         throw new Error(
           `Error is publishing role creation event - roleId : ${roleDocument.id}`
         );
+      cacheRolePermissions();
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
@@ -100,6 +101,7 @@ export async function seedPermissions(
     };
     await createPermission(permissionData);
   }
+  cacheRolePermissions();
 
   res
     .status(StatusCodes.OK)
@@ -133,7 +135,7 @@ export async function seedRolePermissions(
       }
     }
   }
-
+  cacheRolePermissions();
   res
     .status(StatusCodes.OK)
     .json({ message: "role permissions seeded successfully." });

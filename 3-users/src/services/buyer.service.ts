@@ -12,6 +12,26 @@ export const createBuyerService = async (
   }
 };
 
+export const updateBuyerService = async (id: string, data: Partial<IBuyerDocument>) => {
+  const buyer = await BuyerModel.findByIdAndUpdate(
+    id,
+    {
+      ...data,
+    },
+    { new: true }
+  );
+  return buyer;
+};
+
+export const getBuyerByIdService = async (
+  id: string
+): Promise<IBuyerDocument | null> => {
+  const buyer: IBuyerDocument | null = (await BuyerModel.findById(
+    id
+  ).exec()) as IBuyerDocument;
+  return buyer;
+};
+
 export const getBuyerByEmailService = async (
   email: string
 ): Promise<IBuyerDocument | null> => {

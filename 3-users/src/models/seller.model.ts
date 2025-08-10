@@ -3,6 +3,7 @@ import { model, Model, Schema } from "mongoose";
 
 const sellerSchema: Schema = new Schema(
   {
+    buyerId: { type: String, required: true },
     username: { type: String, required: true, index: true },
     email: { type: String, required: true, index: true },
     name: { type: String, required: true, index: true },
@@ -11,13 +12,28 @@ const sellerSchema: Schema = new Schema(
     description: { type: String, required: true },
     oneliner: { type: String, default: "" },
     country: { type: String, required: true },
+    roles: {
+      type: [Number],
+      required: true,
+      validate: {
+        validator: function (arr: number[]) {
+          return Array.isArray(arr) && arr.length > 0;
+        },
+        message: "At least one number is required in the scores array",
+      },
+    },
     languages: [
       {
         language: { type: String, required: true },
         level: { type: String, required: true },
       },
     ],
-    skills: [{ type: String, required: true }],
+    skills: [
+      {
+        skill: { type: String, required: true },
+        level: { type: String, required: true },
+      },
+    ],
     ratingsCount: { type: Number, default: 0 },
     ratingSum: { type: Number, default: 0 },
     ratingCategories: {

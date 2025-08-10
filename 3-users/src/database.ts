@@ -6,7 +6,10 @@ async function databaseConnection(): Promise<void> {
   const context = "database.ts/databaseConnection()";
   try {
     log.info(`Connecting to database. Url=${config.DATABASE_URL}`, context);
-    await mongoose.connect(config.DATABASE_URL);
+    await mongoose.connect(config.DATABASE_URL,{
+      serverSelectionTimeoutMS: 5000,
+      readPreference: 'primaryPreferred'
+    });
     log.info("Database connected successfully", context);
   } catch (err) {
     log.error(

@@ -29,6 +29,17 @@ export async function getRoleByName(
   return role?.dataValues || null;
 }
 
+export async function getRoleById(
+  id: number
+): Promise<IRoleDocument | null> {
+  const role = await RoleModel.findOne({
+    where: {
+      id,
+    },
+  });
+  return role?.dataValues || null;
+}
+
 export async function assignUserRole(
   data: UserRoleCreationAttributes,
   transaction: Transaction

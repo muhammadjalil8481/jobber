@@ -1,6 +1,10 @@
-import { consumeMessage } from "@muhammadjalil8481/jobber-shared";
+import {
+  consumeMessage,
+  IRoleDocument,
+} from "@muhammadjalil8481/jobber-shared";
 import { Channel, ConsumeMessage } from "amqplib";
 import { log } from "@users/logger";
+import { createRoleService } from "@users/services/roles.service";
 
 export const consumeAuthRoleCreationMessage = async (
   channel: Channel
@@ -16,8 +20,8 @@ export const consumeAuthRoleCreationMessage = async (
     exchangeType: "direct",
     log,
     handler: async (msg: ConsumeMessage) => {
-    const data = JSON.parse(msg!.content.toString());
-
+      const data: IRoleDocument = JSON.parse(msg!.content.toString());
+      await createRoleService(data);
     },
   });
 };
