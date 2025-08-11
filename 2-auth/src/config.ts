@@ -13,7 +13,8 @@ const envList = [
   "MYSQL_USER",
   "MYSQL_PASSWORD",
   "MYSQL_DATABASE",
-  "RABBITMQ_ENDPOINT"
+  "RABBITMQ_ENDPOINT",
+  "REDIS_ENDPOINT"
 ] as const;
 
 export const config = createConfig(envList);

@@ -19,7 +19,16 @@ export const getRoleByNameService = async (
   name: string
 ): Promise<IRoleDocument | null> => {
   const role: IRoleDocument | null = (await RoleModel.findOne({
-    name
+    name,
+  }).exec()) as IRoleDocument;
+  return role;
+};
+
+export const getRoleByRoleIdService = async (
+  roleId: number
+): Promise<IRoleDocument | null> => {
+  const role: IRoleDocument | null = (await RoleModel.findOne({
+    roleId,
   }).exec()) as IRoleDocument;
   return role;
 };

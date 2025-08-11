@@ -12,6 +12,7 @@ const envList = [
   "CLOUD_API_KEY",
   "CLOUD_API_SECRET",
   "RABBITMQ_ENDPOINT",
+  "REDIS_ENDPOINT"
 ] as const;
 
 export const config = createConfig(envList);

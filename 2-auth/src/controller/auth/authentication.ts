@@ -24,9 +24,9 @@ import { publishUserCreationEvent } from "@auth/events/producer";
 import {
   assignUserRole,
   getRoleByName,
-  getUserRole,
 } from "@auth/services/roles.service";
 import { IRoleDocument } from "@auth/models/role.model";
+import { getUserRoleId } from "@auth/helpers/getUserRoleId";
 
 export async function signUp(req: Request, res: Response) {
   const context = "signup.ts/signUp()";
@@ -59,8 +59,7 @@ export async function signUp(req: Request, res: Response) {
     const result: IAuthDocument = await createUser(authData, transaction);
 
     const role: IRoleDocument | null = await getRoleByName("buyer");
-    if(!role?.id)
-      throw new Error("Role not found")
+    if (!role?.id) throw new Error("Role not found");
 
     await assignUserRole(
       { userId: result.id!, roleId: role?.id! },
@@ -96,6 +95,8 @@ export async function signUp(req: Request, res: Response) {
 export async function logIn(req: Request, res: Response) {
   const context = "login.ts/logIn()";
   const { username, password } = req.body;
+  const roleName = req.query?.role === "seller" ? "seller" : "buyer";
+
   const isValidEmail: boolean = isEmail(username);
 
   const existingUser: IAuthDocument | null = isValidEmail
@@ -116,14 +117,11 @@ export async function logIn(req: Request, res: Response) {
 
   const fingerprint = createFingerprint(req);
 
-  const userRoles = await getUserRole(existingUser.id!);
-  const roleIds = userRoles.map((userRole) => userRole.id);
-
   const tokenPaylod = {
     id: existingUser.id,
     email: existingUser.email,
     username: existingUser.username,
-    roles: roleIds,
+    roleId: await getUserRoleId(existingUser, roleName),
     fingerprint,
   };
   const accessToken: string = signToken(tokenPaylod, `15m`);

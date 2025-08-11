@@ -5,6 +5,7 @@ import fs from "fs";
 import { StatusCodes } from "http-status-codes";
 import { buyerRouter } from "./buyer";
 import { sellerRouter } from "./seller";
+import { userRouter } from "./user";
 
 const publicKey = fs.readFileSync("./public.pem", "utf-8");
 const gatewayMiddleware = gatewayRequestVerification(publicKey);
@@ -15,8 +16,9 @@ router.get("/health", (_req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ status: "ok" });
 });
 
+router.use(gatewayMiddleware, userRouter);
 router.use(gatewayMiddleware, buyerRouter);
-router.use(gatewayMiddleware,sellerRouter)
+router.use(gatewayMiddleware, sellerRouter);
 
 router.all("*", (req: Request, res: Response) => {
   const url = `${req.protocol}://${req.get("host")}${req.originalUrl}`;

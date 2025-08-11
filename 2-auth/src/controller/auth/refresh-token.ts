@@ -15,6 +15,7 @@ export async function refreshToken(req: Request, res: Response) {
   const context = "refresh-token.ts/refreshToken()";
   const refreshToken = req.headers["x-refresh-token"] as string;
   if (!refreshToken) {
+    console.log('no refreshtoken')
     throw new NotAuthorizedError("Unauthorized.", context);
   }
 
@@ -24,6 +25,7 @@ export async function refreshToken(req: Request, res: Response) {
   ) as IAuthPayload;
 
   const fingerprint = createFingerprint(req);
+  console.log('fingerprints', fingerprint, payload.fingerprint)
   if (fingerprint !== payload.fingerprint) {
     throw new NotAuthorizedError("Unauthorized.", context);
   }
@@ -34,7 +36,7 @@ export async function refreshToken(req: Request, res: Response) {
   }
 
   const existingUser: IAuthDocument | null = await getAuthUserByEmail(email);
-
+  
   if (!existingUser) {
     throw new NotAuthorizedError("Unauthorized.", context);
   }
@@ -43,7 +45,8 @@ export async function refreshToken(req: Request, res: Response) {
     id: existingUser.id,
     email: existingUser.email,
     username: existingUser.username,
-    fingerprint
+    roleId: payload.roleId,
+    fingerprint,
   };
 
   const newAccessToken: string = signToken(tokenPaylod, `15m`);

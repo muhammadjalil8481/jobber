@@ -35,12 +35,4 @@ const getBuyerByUsername = async (
   res.status(StatusCodes.OK).json({ message: "success", data: buyer });
 };
 
-const getCurrentBuyer = async (req: Request, res: Response): Promise<void> => {
-  const currentUserEmail = req.currentUser!.email
-  const buyer: IBuyerDocument | null = await getBuyerByEmailService(
-    currentUserEmail
-  );
-  res.status(StatusCodes.OK).json({ message: "success", data: buyer });
-};
-
-export { getBuyerByEmail, getBuyerByUsername, getCurrentBuyer };
+export { getBuyerByEmail, getBuyerByUsername };

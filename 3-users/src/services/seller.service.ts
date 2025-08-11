@@ -75,6 +75,8 @@ const updateSellerService = async (
         education: sellerData.education,
         socialLinks: sellerData.socialLinks,
         certificates: sellerData.certificates,
+        profilePicture: sellerData.profilePicture,
+        profilePublicId: sellerData.profilePublicId
       },
     },
     { new: true }

@@ -24,12 +24,7 @@ import { Router } from "express";
 const router: Router = Router();
 router.post("/api/v1/signup", validateRequest(signupSchema), signUp);
 router.post("/api/v1/login", validateRequest(loginSchema), logIn);
-router.get(
-  "/api/v1/current-user",
-  checkAuthentication,
-  // withPermission("gigs/create", getRedisClient),
-  getCurrentUser
-);
+router.get("/api/v1/current-user", checkAuthentication, getCurrentUser);
 router.post("/api/v1/verify-email", verifyEmail);
 router.post(
   "/api/v1/resend-verification-email",

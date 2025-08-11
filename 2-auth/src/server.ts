@@ -4,9 +4,9 @@ import { log } from "./logger";
 import { checkDatabaseConnection } from "./database/connection";
 import { Channel } from "amqplib";
 import { createEventConnection } from "./events/connection";
-import { createRedisConnection } from "./redis/connection";
 import { cacheRolePermissions } from "./redis/cacheRolePermissions";
 import { RedisClientType } from "redis";
+import { Redis } from "@muhammadjalil8481/jobber-shared";
 
 const SERVER_PORT = config.PORT || 4002;
 export let rabbitMQChannel: Channel;
@@ -17,7 +17,9 @@ function startServer(app: Application) {
     app.listen(SERVER_PORT, async () => {
       await checkDatabaseConnection();
       rabbitMQChannel = (await createEventConnection()) as Channel;
-      redisClient = await createRedisConnection();
+      const redisInstance = new Redis(config.REDIS_ENDPOINT, log);
+      redisClient =
+        (await redisInstance.createRedisConnection()) as RedisClientType;
       await cacheRolePermissions();
       log.info(
         `Auth service running on port ${SERVER_PORT}`,

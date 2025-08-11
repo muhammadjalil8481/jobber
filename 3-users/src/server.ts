@@ -4,9 +4,13 @@ import { log } from "./logger";
 import { databaseConnection } from "./database";
 import { Channel } from "amqplib";
 import { createEventConnection } from "./events/connection";
+import { RedisClientType } from "redis";
+import { Redis } from "@muhammadjalil8481/jobber-shared";
 
 const SERVER_PORT = config.PORT || 4002;
 export let rabbitMQChannel: Channel;
+export let redisClient: RedisClientType;
+
 
 function startServer(app: Application) {
   try {
@@ -17,6 +21,9 @@ function startServer(app: Application) {
       );
       await databaseConnection();
       rabbitMQChannel = (await createEventConnection()) as Channel;
+      const redisInstance = new Redis(config.REDIS_ENDPOINT, log);
+      redisClient =
+        (await redisInstance.createRedisConnection()) as RedisClientType;
     });
   } catch (error) {
     log.error(
