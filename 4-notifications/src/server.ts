@@ -1,11 +1,16 @@
 import { Application } from "express";
 import { config } from "./config";
 import { log } from "./logger";
+import { Channel } from "amqplib";
+import { createEventConnection } from "./events/connection";
 
 const SERVER_PORT = config.PORT || 4003;
+export let rabbitMQChannel: Channel;
+
 function startServer(app: Application) {
   try {
     app.listen(SERVER_PORT, async () => {
+      rabbitMQChannel = (await createEventConnection()) as Channel;
       log.info(
         `Notification service running on port ${SERVER_PORT}`,
         "server.ts/startServer()"

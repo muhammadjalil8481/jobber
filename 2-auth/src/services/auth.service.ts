@@ -113,7 +113,8 @@ export async function updateAuthUserRole(email: string, roleIds: number[]) {
 export async function updateVerifyEmailField(
   id: number,
   emailVerified: number,
-  emailVerificationToken: string
+  emailVerificationToken: string,
+  transaction?: Transaction
 ) {
   await AuthModel.update(
     { emailVerificationToken, emailVerified },
@@ -121,6 +122,7 @@ export async function updateVerifyEmailField(
       where: {
         id,
       },
+      transaction,
     }
   );
 }
