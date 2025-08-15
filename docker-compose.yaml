@@ -23,7 +23,19 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
       MONGO_INITDB_DATABASE: jobber-users
     volumes:
-      - ./docker-volumes/mongodb_data:/data/db
+      - ./docker-volumes/mongodb_users:/data/db
+  gigs_database:
+    container_name: gigs_db_container
+    image: mongo:latest
+    restart: always
+    ports:
+      - '27018:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: jobber-gigs
+    volumes:
+      - ./docker-volumes/mongodb_gigs:/data/db
   
   rabbitmq:
     container_name: rabbitmq_container
