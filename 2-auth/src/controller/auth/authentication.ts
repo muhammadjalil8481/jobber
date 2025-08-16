@@ -20,11 +20,11 @@ import {
 } from "@auth/services/auth.service";
 import { signToken } from "@auth/services/helpers";
 import { omit } from "lodash";
-import { publishUserCreationEvent } from "@auth/events/producer";
 import {
-  assignUserRole,
-  getRoleByName,
-} from "@auth/services/roles.service";
+  publishUserCreationEvent,
+  publishUserCreationNotificationEvent,
+} from "@auth/events/producer";
+import { assignUserRole, getRoleByName } from "@auth/services/roles.service";
 import { IRoleDocument } from "@auth/models/role.model";
 import { getUserRoleId } from "@auth/helpers/getUserRoleId";
 
@@ -74,6 +74,14 @@ export async function signUp(req: Request, res: Response) {
     if (!isUserCreationEventPublished)
       throw new Error(
         `Error is publishing user creation event - email : ${email}`
+      );
+
+    const isUserCreationNotificationEventPublished =
+      await publishUserCreationNotificationEvent(result);
+
+    if (!isUserCreationNotificationEventPublished)
+      throw new Error(
+        `Error is publishing user creation notification event - email : ${email}`
       );
 
     await transaction.commit();

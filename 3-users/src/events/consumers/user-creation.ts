@@ -7,10 +7,9 @@ import { createBuyerService } from "@users/services/buyer.service";
 import { Channel, ConsumeMessage } from "amqplib";
 
 export const consumeAuthUserCreationMessage = async (channel: Channel): Promise<void> => {
-  const exchangeName = "auth_user_creation_ex";
   await consumeMessage({
     channel,
-    exchangeName,
+    exchangeName: "auth_user_creation_ex",
     queueName: "auth_user_creation_queue",
     bindingKey: "auth_user_creation_rk",
     context: "user-creation.ts/consumeBuyerDirectMessage()",

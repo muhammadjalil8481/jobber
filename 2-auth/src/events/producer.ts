@@ -1,3 +1,4 @@
+import { config } from "@auth/config";
 import { log } from "@auth/logger";
 import { rabbitMQChannel } from "@auth/server";
 import {
@@ -37,6 +38,34 @@ async function publishUserCreationEvent(
   return isPublished;
 }
 
+async function publishUserCreationNotificationEvent(userData: IAuthDocument) {
+  const context = `producer.ts/publishUserCreationNotificationvent()`;
+  if (!userData)
+    throw new Error(`Invalid user data : ${userData} coming From ${context}`);
+  const verificationLink = `${config.CLIENT_URL}/confirm_email?v_token=${userData.emailVerificationToken}`;
+
+  const message = {
+    name: userData.name,
+    username: userData.username,
+    email: userData.email,
+    verificationLink,
+  };
+
+  const isPublished = await publishDirectMessage({
+    channel: rabbitMQChannel,
+    exchangeName: "auth_user_creation_notification_ex",
+    routingKey: "auth_user_creation_notification_rk",
+    message: JSON.stringify(message),
+    logParams: {
+      log,
+      logMessage: `User creation notification event successfully published - email : ${userData.email}`,
+      context,
+    },
+  });
+
+  return isPublished;
+}
+
 async function publishRoleCreationEvent(data: IRoleDocument) {
   const context = `producer.ts/publishRoleCreationEvent()`;
   if (!data)
@@ -61,4 +90,8 @@ async function publishRoleCreationEvent(data: IRoleDocument) {
   return isPublished;
 }
 
-export { publishUserCreationEvent, publishRoleCreationEvent };
+export {
+  publishUserCreationEvent,
+  publishUserCreationNotificationEvent,
+  publishRoleCreationEvent,
+};
