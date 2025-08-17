@@ -10,7 +10,7 @@ import { Redis } from "@muhammadjalil8481/jobber-shared";
 const SERVER_PORT = config.PORT || 4002;
 export let rabbitMQChannel: Channel;
 export let redisClient: RedisClientType;
-
+export let getRedisClient = () => redisClient;
 
 function startServer(app: Application) {
   try {

@@ -22,6 +22,15 @@ export const getSellerByBuyerIdService = async (
   return seller;
 };
 
+export const getSellerByUserIdService = async (
+  id: number
+): Promise<ISellerDocument | null> => {
+  const seller: ISellerDocument | null = (await SellerModel.findOne({
+    userId: id,
+  }).exec()) as ISellerDocument;
+  return seller;
+};
+
 const getSellerByUsernameService = async (
   username: string
 ): Promise<ISellerDocument | null> => {

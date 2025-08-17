@@ -30,5 +30,5 @@ export const getRoleByRoleIdService = async (
   const role: IRoleDocument | null = (await RoleModel.findOne({
     roleId,
   }).exec()) as IRoleDocument;
-  return role;
+  return role
 };

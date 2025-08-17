@@ -3,7 +3,7 @@ import { rabbitMQChannel } from "@users/server";
 import {log} from "../../logger"
 
 export async function publishRoleUpdationEvent(email: string, roles: number[]) {
-  const context = `producer.ts/publishRoleUpdationEvent()`;
+  const context = `seller-producer.ts/publishRoleUpdationEvent()`;
   if (!email || !roles?.length)
     throw new Error(`Email or role is missing. Context ${context}`);
   const message = {

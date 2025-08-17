@@ -1,4 +1,4 @@
-import { LogLevel, winstonLogger } from "@muhammadjalil8481/jobber-shared";
+import { LogLevel, winstonLogger} from "@muhammadjalil8481/jobber-shared";
 
 const log = winstonLogger({
   name: "users-service",

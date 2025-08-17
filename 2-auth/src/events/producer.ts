@@ -15,6 +15,7 @@ async function publishUserCreationEvent(
   if (!userData)
     throw new Error(`Invalid user data : ${userData} coming From ${context}`);
   const message = {
+    userId: userData.id,
     name: userData.name,
     username: userData.username,
     email: userData.email,

@@ -13,11 +13,9 @@ import { forgetPasswordSchema } from "@auth/schema/forget-password.schema";
 import { loginSchema } from "@auth/schema/login.schema";
 import { resetPasswordSchema } from "@auth/schema/resetPasswordSchema";
 import { signupSchema } from "@auth/schema/signup.schema";
-// import { getRedisClient } from "@auth/server";
 import {
   checkAuthentication,
   validateRequest,
-  // withPermission,
 } from "@muhammadjalil8481/jobber-shared";
 import { Router } from "express";
 

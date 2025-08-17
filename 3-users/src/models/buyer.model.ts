@@ -3,6 +3,11 @@ import { model, Model, Schema } from "mongoose";
 
 const buyerSchema: Schema = new Schema(
   {
+    userId: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
     name: {
       type: String,
       required: true,
@@ -12,11 +17,13 @@ const buyerSchema: Schema = new Schema(
       type: String,
       required: true,
       index: true,
+      unique: true
     },
     email: {
       type: String,
       required: true,
       index: true,
+      unique: true
     },
     roles: {
       type: [Number],

@@ -1,6 +1,6 @@
 import Joi, { ObjectSchema } from "joi";
 
-export const gigCreateSchema: ObjectSchema = Joi.object().keys({
+export const createGigSchema: ObjectSchema = Joi.object().keys({
   sellerId: Joi.string().required().messages({
     'string.base': 'Seller Id must be of type string',
     'string.empty': 'Seller Id is required',

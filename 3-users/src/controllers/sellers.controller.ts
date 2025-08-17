@@ -83,6 +83,7 @@ const createSeller = async (req: Request, res: Response): Promise<void> => {
 
   const seller: Partial<ISellerDocument> = {
     buyerId,
+    userId: buyer.userId,
     name: buyer.name,
     username: buyer.username,
     email: buyer.email,

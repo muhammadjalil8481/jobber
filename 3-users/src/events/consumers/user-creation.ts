@@ -17,8 +17,9 @@ export const consumeAuthUserCreationMessage = async (channel: Channel): Promise<
     log,
     handler: async (msg: ConsumeMessage) => {
       const data = JSON.parse(msg!.content.toString());
-      const { name,username, email, country, createdAt, roles } = data;
+      const { name,username, email, country, createdAt, roles,userId } = data;
       const buyer: IBuyerDocument = {
+        userId,
         name,
         username,
         email,

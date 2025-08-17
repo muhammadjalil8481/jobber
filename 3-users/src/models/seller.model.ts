@@ -3,9 +3,10 @@ import { model, Model, Schema } from "mongoose";
 
 const sellerSchema: Schema = new Schema(
   {
-    buyerId: { type: String, required: true },
-    username: { type: String, required: true, index: true },
-    email: { type: String, required: true, index: true },
+    userId: { type: Number, required: true,unique: true },
+    buyerId: { type: String, required: true,unique: true },
+    username: { type: String, required: true, index: true,unique: true },
+    email: { type: String, required: true, index: true, unique: true },
     name: { type: String, required: true, index: true },
     profilePicture: { type: String },
     profilePublicId: { type: String },

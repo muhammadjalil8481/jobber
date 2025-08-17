@@ -19,6 +19,8 @@ import { UploadApiResponse } from "cloudinary";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { v4 as uuidV4 } from "uuid";
+import { Document } from "mongoose";
+import { redisClient } from "@users/server";
 
 export const getCurrentUser = async (
   req: Request,
@@ -27,27 +29,54 @@ export const getCurrentUser = async (
   const context = `users.controller.ts/getCurrentUser()`;
   if (!req.currentUser)
     throw new NotFoundError("Current User not found", context);
-
   const { roleId, email } = req.currentUser;
-  const role = await getRoleByRoleIdService(roleId);
-  const roleName = role?.name;
-  if (!roleName || !email)
-    throw new NotFoundError("Current User not found", context);
-  const isSeller = roleName === "seller";
+  let userData;
 
-  const user = isSeller
-    ? await getSellerByEmailService(email)
-    : await getBuyerByEmailService(email);
+  const cacheKey = `user:${email}`;
+  const checkUserInCache: string | null = await redisClient.get(cacheKey);
 
-  if (!user) throw new NotFoundError("Current User not found", context);
+  if (checkUserInCache) {
+    userData = JSON.parse(checkUserInCache);
+  } else {
+    const role = await getRoleByRoleIdService(roleId);
+    const roleName = role?.name;
+    if (!roleName || !email)
+      throw new NotFoundError("Current User not found", context);
+    const isSeller = roleName === "seller";
 
-  res.status(StatusCodes.OK).json({ message: "success", data: user });
+    const user = isSeller
+      ? await getSellerByEmailService(email)
+      : await getBuyerByEmailService(email);
+    if (!user) throw new NotFoundError("Current User not found", context);
+
+    const roles = await Promise.all(
+      (user.roles as number[]).map(async (roleId) => {
+        const roleData = await getRoleByRoleIdService(Number(roleId));
+        if (!roleData) {
+          throw new NotFoundError(
+            `Role with id ${role} not found for user ${user.username}`,
+            context
+          );
+        }
+        return roleData;
+      })
+    );
+
+    userData = {
+      ...(user as unknown as Document).toObject(),
+      roles,
+    };
+    await redisClient.setEx(cacheKey, 900, JSON.stringify(userData));
+  }
+
+  res.status(StatusCodes.OK).json({ message: "success", data: userData });
 };
 
 export const updateProfilePicture = async (req: Request, res: Response) => {
   const context = `users.controller.ts/getCurrentUser()`;
   const base64Image = req.body.image;
-  if(!base64Image) throw new BadRequestError("Plese provide an image",context)
+  if (!base64Image)
+    throw new BadRequestError("Plese provide an image", context);
   const buyerId = req.params.buyerId;
   const buyer = await getBuyerByIdService(buyerId);
   if (!buyer) throw new BadRequestError("Invalid buyer id", context);

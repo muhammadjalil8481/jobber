@@ -14,7 +14,7 @@ services:
       - ./docker-volumes/mysql:/var/lib/mysql
   user_database:
     container_name: user_db_container
-    image: mongo:7.0
+    image: mongo:8.0
     restart: always
     ports:
       - '27017:27017'
@@ -26,7 +26,7 @@ services:
       - ./docker-volumes/mongodb_users:/data/db
   gigs_database:
     container_name: gigs_db_container
-    image: mongo:7.0
+    image: mongo:8.0
     restart: always
     ports:
       - '27018:27017'
