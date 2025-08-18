@@ -32,7 +32,7 @@ export const getCurrentUser = async (
   const { roleId, email } = req.currentUser;
   let userData;
 
-  const cacheKey = `user:${email}`;
+  const cacheKey = `user:${email}:roleId${roleId}`;
   const checkUserInCache: string | null = await redisClient.get(cacheKey);
 
   if (checkUserInCache) {

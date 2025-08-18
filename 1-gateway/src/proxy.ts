@@ -169,3 +169,10 @@ export const usersProxy = createProxy({
   serviceNameForLogging: "Users",
   handleSelfResponse: false,
 });
+
+export const gigsProxy = createProxy({
+  target: "http://localhost:4004",
+  serviceName: "gigs",
+  serviceNameForLogging: "Gigs",
+  handleSelfResponse: false,
+});

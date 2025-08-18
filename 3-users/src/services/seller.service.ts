@@ -25,10 +25,9 @@ export const getSellerByBuyerIdService = async (
 export const getSellerByUserIdService = async (
   id: number
 ): Promise<ISellerDocument | null> => {
-  const seller: ISellerDocument | null = (await SellerModel.findOne({
-    userId: id,
-  }).exec()) as ISellerDocument;
-  return seller;
+  const sellers: ISellerDocument[] = (await SellerModel.find({
+  }).exec()) as ISellerDocument[];
+  return sellers.find((slr)=>slr.userId == id) || null ;
 };
 
 const getSellerByUsernameService = async (

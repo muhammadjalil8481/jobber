@@ -6,7 +6,7 @@ import router from "./router/routes";
 import { log } from "./logger";
 import { errorHandlerMiddleware } from "@muhammadjalil8481/jobber-shared";
 import { generateServicePath } from "./middlewares/generate-service-path";
-import { authProxy, usersProxy } from "./proxy";
+import { authProxy, gigsProxy, usersProxy } from "./proxy";
 
 const app = express();
 
@@ -16,6 +16,8 @@ app.use(verifyUser);
 
 app.use(generateServicePath("auth"), authProxy);
 app.use(generateServicePath("users"), usersProxy);
+app.use(generateServicePath("gigs"), gigsProxy);
+
 
 app.use(express.json({ limit: "1mb" })); //Works on ajax request
 app.use(express.urlencoded({ limit: "1mb", extended: true })); //Works on html form submissions

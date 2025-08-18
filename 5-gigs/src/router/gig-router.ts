@@ -9,7 +9,7 @@ import { Router } from "express";
 const router = Router();
 
 router.post(
-  "/gigs",
+  "/api/v1/create",
   checkAuthentication,
   validateRequest(createGigSchema),
   createGig
