@@ -1,12 +1,14 @@
 import {
   getGigByIdService,
   getGigsService,
+  getRelatedGigsService,
   GetSellerGigsParams,
   getSellerGigsService,
 } from "@gigs/services/get-services";
 import { BadRequestError } from "@muhammadjalil8481/jobber-shared";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import mongoose from "mongoose";
 
 export const getGigById = async (
   req: Request,
@@ -49,6 +51,21 @@ export const getGigs = async (req: Request, res: Response) => {
     totalPages,
     currentPage,
     perPage,
+    data: gigs,
+  });
+};
+
+export const getRelatedGigs = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  if (!id || !mongoose.isValidObjectId(id))
+    throw new BadRequestError(
+      `Please provide correct id ${id}`,
+      "get.ts/getRelatedGigs()"
+    );
+  const gigs = await getRelatedGigsService(id);
+  res.status(StatusCodes.OK).json({
+    message: "success",
+    count: gigs.length,
     data: gigs,
   });
 };

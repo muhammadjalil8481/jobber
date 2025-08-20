@@ -1,5 +1,5 @@
 import { createGig } from "@gigs/controllers/create";
-import { getGigById, getGigs, getGigsBySellerId } from "@gigs/controllers/get";
+import { getGigById, getGigs, getGigsBySellerId, getRelatedGigs } from "@gigs/controllers/get";
 import { makeGigInactive } from "@gigs/controllers/inactive";
 import { updateGig } from "@gigs/controllers/update";
 import { createGigSchema } from "@gigs/schemas/createGig.schema";
@@ -26,9 +26,9 @@ router.patch(
 );
 router.patch("/api/v1/inactive/:id", checkAuthentication, makeGigInactive);
 router.get(
-  "/api/v1/:id",
+  "/api/v1/related-gigs/:id",
   checkAuthentication,
-  getGigById
+  getRelatedGigs
 );
 router.get(
   "/api/v1/seller/:sellerId",
@@ -36,9 +36,15 @@ router.get(
   getGigsBySellerId
 );
 router.get(
+  "/api/v1/:id",
+  checkAuthentication,
+  getGigById
+);
+router.get(
   "/api/v1/",
   checkAuthentication,
   getGigs
 );
+
 
 export { router as gighRouter };

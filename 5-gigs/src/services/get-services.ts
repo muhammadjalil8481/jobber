@@ -1,6 +1,6 @@
 import { parseDeliveryTime } from "@gigs/helpers/helpers";
 import { GigModel } from "@gigs/models/gig.model";
-import { ISellerGig } from "@muhammadjalil8481/jobber-shared";
+import { BadRequestError, ISellerGig } from "@muhammadjalil8481/jobber-shared";
 
 export interface GetSellerGigsParams {
   active: boolean;
@@ -87,4 +87,34 @@ export const getGigsService = async (queryParams: GetGigsParams) => {
 
   const totalPages = Math.ceil(count / limit);
   return { gigs, count, totalPages, currentPage: page, perPage: limit };
+};
+
+export const getRelatedGigsService = async (id: string) => {
+  const gig = await getGigByIdService(id);
+  if (!gig)
+    throw new BadRequestError(
+      `Gig with id ${id} not found`,
+      "get-services.ts/getRelatedGigsService()"
+    );
+  const searchString = [
+    gig.title,
+    gig.description,
+    gig.basicTitle,
+    gig.basicDescription,
+    ...(gig.categories || []),
+    ...(gig.subCategories || []),
+    ...(gig.tags || []),
+  ].join(" ");
+
+  const gigs: ISellerGig[] = await GigModel.find(
+    {
+      _id: { $ne: gig._id },
+      active: true,
+      $text: { $search: searchString },
+    },
+    { score: { $meta: "textScore" } }
+  )
+    .sort({ score: { $meta: "textScore" } })
+    .limit(5);
+  return gigs || [];
 };

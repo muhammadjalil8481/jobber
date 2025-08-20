@@ -39,7 +39,7 @@ const gigSchema: Schema = new Schema(
         count: { type: Number, default: 0 },
       },
     },
-    price: { type: Number, required: true},
+    price: { type: Number, required: true },
     coverImage: { type: String, required: true },
     coverImageId: { type: String, required: true },
   },
@@ -48,6 +48,23 @@ const gigSchema: Schema = new Schema(
     versionKey: false,
   }
 );
+
+gigSchema.index(
+  {
+    title: "text",
+    description: "text",
+    basicTitle: "text",
+    basicDescription: "text",
+    categories: "text",
+    subCategories: "text",
+    tags: "text",
+  },
+  {
+    partialFilterExpression: { active: true },
+  }
+);
+
+
 
 const GigModel: Model<ISellerGig> = model<ISellerGig>("Gig", gigSchema, "Gig");
 export { GigModel };
