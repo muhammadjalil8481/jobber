@@ -1,6 +1,6 @@
 import Joi, { ObjectSchema } from "joi";
 
-export const gigUpdateSchema: ObjectSchema = Joi.object().keys({
+export const updateGigSchema: ObjectSchema = Joi.object().keys({
   title: Joi.string().optional().messages({
     'string.base': 'Please add a gig title',
     'string.empty': 'Gig title is required',

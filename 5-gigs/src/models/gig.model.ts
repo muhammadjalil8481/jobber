@@ -3,7 +3,7 @@ import mongoose, { model, Model, Schema } from "mongoose";
 
 const gigSchema: Schema = new Schema(
   {
-    userId: { type: Number, required: true },
+    userId: { type: String, required: true },
     sellerId: { type: mongoose.Schema.Types.ObjectId, index: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
@@ -14,6 +14,7 @@ const gigSchema: Schema = new Schema(
     tags: [{ type: String }],
     active: { type: Boolean, default: true },
     expectedDelivery: { type: String, default: "" },
+    expectedDeliveryInMinutes: { type: Number },
     ratingsCount: { type: Number, default: 0 },
     ratingSum: { type: Number, default: 0 },
     ratingCategories: {

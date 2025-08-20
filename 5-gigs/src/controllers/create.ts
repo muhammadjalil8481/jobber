@@ -1,5 +1,6 @@
 import { publishGigCountIncrementEvent } from "@gigs/events/producers/create-gig.producer";
-import { createGigService } from "@gigs/services/get";
+import { parseDeliveryTime } from "@gigs/helpers/helpers";
+import { createGigService } from "@gigs/services/write-services";
 import {
   BadRequestError,
   isDataURL,
@@ -33,6 +34,8 @@ const createGig = async (req: Request, res: Response): Promise<void> => {
     throw new BadRequestError("Cover image upload error. Try again", context);
   }
 
+  const expectedDeliveryInMinutes = parseDeliveryTime(req.body.expectedDelivery)
+
   const gig: ISellerGig = {
     userId: req.currentUser!.id,
     sellerId: req.body.sellerId,
@@ -45,6 +48,7 @@ const createGig = async (req: Request, res: Response): Promise<void> => {
     tags: req.body.tags,
     active: true,
     expectedDelivery: req.body.expectedDelivery,
+    expectedDeliveryInMinutes: expectedDeliveryInMinutes,
     price: req.body.price,
     coverImage: `${uploadCoverImageResult?.secure_url}`,
     coverImageId: uploadCoverImageResult.public_id,

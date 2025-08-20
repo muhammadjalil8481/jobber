@@ -1,5 +1,9 @@
 import { createGig } from "@gigs/controllers/create";
+import { getGigById, getGigs, getGigsBySellerId } from "@gigs/controllers/get";
+import { makeGigInactive } from "@gigs/controllers/inactive";
+import { updateGig } from "@gigs/controllers/update";
 import { createGigSchema } from "@gigs/schemas/createGig.schema";
+import { updateGigSchema } from "@gigs/schemas/updateGigSchema";
 import {
   checkAuthentication,
   validateRequest,
@@ -13,6 +17,28 @@ router.post(
   checkAuthentication,
   validateRequest(createGigSchema),
   createGig
+);
+router.patch(
+  "/api/v1/update/:id",
+  checkAuthentication,
+  validateRequest(updateGigSchema),
+  updateGig
+);
+router.patch("/api/v1/inactive/:id", checkAuthentication, makeGigInactive);
+router.get(
+  "/api/v1/:id",
+  checkAuthentication,
+  getGigById
+);
+router.get(
+  "/api/v1/seller/:sellerId",
+  checkAuthentication,
+  getGigsBySellerId
+);
+router.get(
+  "/api/v1/",
+  checkAuthentication,
+  getGigs
 );
 
 export { router as gighRouter };

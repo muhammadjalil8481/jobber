@@ -1,30 +1,15 @@
 import { GigModel } from "@gigs/models/gig.model";
 import { BadRequestError } from "@muhammadjalil8481/jobber-shared";
 import { ISellerGig } from "@muhammadjalil8481/jobber-shared/dist/types/interfaces/gig.interface";
+import { getGigByIdService } from "./get-services";
 
-interface GetGigsParams {
-  active: boolean;
-}
+
 
 const createGigService = async (data: ISellerGig) => {
   const gig = await GigModel.create(data);
   return gig;
-  //after creating gig publish the message to user service
 };
 
-const getGigByIdService = async (id: string) => {
-  const gig: ISellerGig | null = await GigModel.findById(id);
-  return gig;
-};
-
-const getSellerGigsService = async (id: string, queryParams: GetGigsParams) => {
-  const { active = true } = queryParams;
-  const gigs: ISellerGig[] = await GigModel.find({
-    sellerId: id,
-    active,
-  });
-  return gigs;
-};
 
 const makeGigInactiveService = async (id: string) => {
   const context = "get.ts/makeGigInactiveService()";
@@ -83,8 +68,6 @@ const updateGigService = async (id: string, data: Partial<ISellerGig>) => {
 
 export {
   createGigService,
-  getGigByIdService,
-  getSellerGigsService,
   makeGigInactiveService,
   updateGigService,
   makeGigActiveService,

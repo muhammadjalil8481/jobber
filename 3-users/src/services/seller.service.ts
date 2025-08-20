@@ -25,9 +25,10 @@ export const getSellerByBuyerIdService = async (
 export const getSellerByUserIdService = async (
   id: number
 ): Promise<ISellerDocument | null> => {
-  const sellers: ISellerDocument[] = (await SellerModel.find({
-  }).exec()) as ISellerDocument[];
-  return sellers.find((slr)=>slr.userId == id) || null ;
+  const seller: ISellerDocument | null = await SellerModel.findOne({
+    userId: id,
+  });
+  return seller;
 };
 
 const getSellerByUsernameService = async (
@@ -58,7 +59,7 @@ const getRandomSellersService = async (
 };
 
 const createSellerService = async (
-  sellerData: Partial<ISellerDocument>,
+  sellerData: Partial<ISellerDocument>
 ): Promise<ISellerDocument> => {
   const createdSeller: ISellerDocument = (
     await SellerModel.create(sellerData)
@@ -68,7 +69,7 @@ const createSellerService = async (
 
 const updateSellerService = async (
   sellerId: string,
-  sellerData: Partial<ISellerDocument>,
+  sellerData: Partial<ISellerDocument>
 ): Promise<ISellerDocument> => {
   const updatedSeller: ISellerDocument = (await SellerModel.findOneAndUpdate(
     { _id: sellerId },
@@ -84,7 +85,7 @@ const updateSellerService = async (
         socialLinks: sellerData.socialLinks,
         certificates: sellerData.certificates,
         profilePicture: sellerData.profilePicture,
-        profilePublicId: sellerData.profilePublicId
+        profilePublicId: sellerData.profilePublicId,
       },
     },
     { new: true }
@@ -92,12 +93,11 @@ const updateSellerService = async (
   return updatedSeller;
 };
 
-
 export {
   getSellerByIdService,
   getRandomSellersService,
   getSellerByEmailService,
   getSellerByUsernameService,
   createSellerService,
-  updateSellerService
+  updateSellerService,
 };

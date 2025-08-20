@@ -3,7 +3,7 @@ import { model, Model, Schema } from "mongoose";
 
 const sellerSchema: Schema = new Schema(
   {
-    userId: { type: Number, required: true,unique: true },
+    userId: { type: String, required: true,unique: true },
     buyerId: { type: String, required: true,unique: true },
     username: { type: String, required: true, index: true,unique: true },
     email: { type: String, required: true, index: true, unique: true },
