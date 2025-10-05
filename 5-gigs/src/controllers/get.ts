@@ -4,6 +4,7 @@ import {
   getRelatedGigsService,
   GetSellerGigsParams,
   getSellerGigsService,
+  getTopGigsByCategoryService,
 } from "@gigs/services/get-services";
 import { BadRequestError } from "@muhammadjalil8481/jobber-shared";
 import { Request, Response } from "express";
@@ -63,6 +64,16 @@ export const getRelatedGigs = async (req: Request, res: Response) => {
       "get.ts/getRelatedGigs()"
     );
   const gigs = await getRelatedGigsService(id);
+  res.status(StatusCodes.OK).json({
+    message: "success",
+    count: gigs.length,
+    data: gigs,
+  });
+};
+
+export const getTopGigsByCategory = async (req: Request, res: Response) => {
+  const categrory = req.params.category;
+  const gigs = await getTopGigsByCategoryService(categrory);
   res.status(StatusCodes.OK).json({
     message: "success",
     count: gigs.length,

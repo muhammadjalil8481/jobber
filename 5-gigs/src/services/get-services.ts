@@ -118,3 +118,34 @@ export const getRelatedGigsService = async (id: string) => {
     .limit(5);
   return gigs || [];
 };
+
+export const getTopGigsByCategoryService = async (category: string) => {
+  const gigs = await GigModel.aggregate([
+    {
+      $match: {
+        categories: category,
+        active: true,
+        ratingsCount: { $gt: 0 },
+      },
+    },
+    {
+      $addFields: {
+        averageRating: {
+          $cond: [
+            { $gt: ["$ratingsCount", 0] },
+            { $divide: ["$ratingSum", "$ratingsCount"] },
+            0,
+          ],
+        },
+      },
+    },
+    {
+      $sort: { averageRating: -1, ratingsCount: -1 },
+    },
+    {
+      $limit: 10,
+    },
+  ]);
+
+  return gigs || [];
+};

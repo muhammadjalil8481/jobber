@@ -8,12 +8,12 @@ export const consumeAuthUserCreationMessage = async (
   channel: Channel
 ): Promise<void> => {
   const context = `authUserCreation.ts/consumeAuthUserCreationMessage()`;
-  const exchangeName = "auth_user_creation_notification_ex";
+  const exchangeName = "auth_user_creation_ex";
   await consumeMessage({
     channel,
-    exchangeName,
-    queueName: "auth_user_creation_notification_queue",
-    bindingKey: "auth_user_creation_notification_rk",
+    exchangeName: "auth_user_creation_ex",
+    queueName: "auth_user_notification_queue",
+    bindingKey: "auth_user_creation_rk",
     context: "user-creation.ts/consumeBuyerDirectMessage()",
     exchangeType: "direct",
     log,

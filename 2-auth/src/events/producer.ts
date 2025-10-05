@@ -14,6 +14,8 @@ async function publishUserCreationEvent(
   const context = `producer.ts/publishUserCreationEvent()`;
   if (!userData)
     throw new Error(`Invalid user data : ${userData} coming From ${context}`);
+  const verificationLink = `${config.CLIENT_URL}/confirm_email?v_token=${userData.emailVerificationToken}`;
+
   const message = {
     userId: userData.id,
     name: userData.name,
@@ -22,6 +24,7 @@ async function publishUserCreationEvent(
     country: userData.country,
     createdAt: userData.createdAt,
     roles: [roleId],
+    verificationLink
   };
 
   const isPublished = await publishDirectMessage({
@@ -32,34 +35,6 @@ async function publishUserCreationEvent(
     logParams: {
       log,
       logMessage: `User creation event successfully published - email : ${userData.email}`,
-      context,
-    },
-  });
-
-  return isPublished;
-}
-
-async function publishUserCreationNotificationEvent(userData: IAuthDocument) {
-  const context = `producer.ts/publishUserCreationNotificationvent()`;
-  if (!userData)
-    throw new Error(`Invalid user data : ${userData} coming From ${context}`);
-  const verificationLink = `${config.CLIENT_URL}/confirm_email?v_token=${userData.emailVerificationToken}`;
-
-  const message = {
-    name: userData.name,
-    username: userData.username,
-    email: userData.email,
-    verificationLink,
-  };
-
-  const isPublished = await publishDirectMessage({
-    channel: rabbitMQChannel,
-    exchangeName: "auth_user_creation_notification_ex",
-    routingKey: "auth_user_creation_notification_rk",
-    message: JSON.stringify(message),
-    logParams: {
-      log,
-      logMessage: `User creation notification event successfully published - email : ${userData.email}`,
       context,
     },
   });
@@ -93,6 +68,5 @@ async function publishRoleCreationEvent(data: IRoleDocument) {
 
 export {
   publishUserCreationEvent,
-  publishUserCreationNotificationEvent,
   publishRoleCreationEvent,
 };
